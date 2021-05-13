@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Simple Message Board
+{% endblock %}
+
+{% block content %}
+    {% for post in posts %}
+        <br>
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text"> {{ post['content'] }} </p>
+                <span class="badge badge-secondary">{{ post['time_stamp'] }}</span>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    New Post
+{% endblock %}
+
+{% block content %}
+    <br>
+    <form method="post">
+        <div class="form-group">
+            <label for="content">Create New Post</label>
+            <textarea name="content" placeholder="Write a content..." class="form-control" id="content" rows="9" required>{{ request.form['content'] }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+{% endblock %}
