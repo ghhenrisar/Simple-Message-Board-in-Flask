@@ -349,3 +349,4 @@ Use a virtualenv to get different versions of flask, django etc from our default
 /home/your_user_name/.virtualenvs/your_virtualenv_name/
 ```
 
+If it is deployed to Microsoft Azure, `gunicorn --bind=0.0.0.0 --timeout 600 flask_app:app` must be added to `Startup Command` at `Configuration -> General settings` of the Web App.
