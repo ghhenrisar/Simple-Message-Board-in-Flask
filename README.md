@@ -350,3 +350,68 @@ Use a virtualenv to get different versions of flask, django etc from our default
 ```
 
 If it is deployed to Microsoft Azure, `gunicorn --bind=0.0.0.0 --timeout 600 flask_app:app` must be added to `Startup Command` at `Configuration -> General settings` of the Web App.
+
+
+## Remarks
+Reference: https://www.digitalocean.com/community/tutorials/how-to-use-python-markdown-with-flask-and-sqlite
+
+1. To run the application, type the followings in Terminal:
+--------------------------------------------------------------
+python flask_app.py
+--------------------------------------------------------------
+or
+--------------------------------------------------------------
+set FLASK_APP=flask_app
+set FLASK_DEBUG=1
+flask run
+--------------------------------------------------------------
+Debug mode will allow us to edit our files without constantly restarting the web server.
+
+2a. For database using sqlite, install sqlite first.
+Type the following code on schema.sql
+--------------------------------------------------------------
+DROP TABLE IF EXISTS table_posts;
+
+CREATE TABLE table_posts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    time_stamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    content TEXT NOT NULL
+);
+--------------------------------------------------------------
+
+2b. To create databsae.db, type the following code on the terminal:
+--------------------------------------------------------------
+sqlite3 database.db < schema.sql
+--------------------------------------------------------------
+
+2c. Remark: To check data type of a table, the SQL command is:
+--------------------------------------------------------------
+PRAGMA table_info(your_table_name);
+--------------------------------------------------------------
+
+3. Display local time for timestamp and make use of Markdown for content text
+--------------------------------------------------------------
+@app.route('/')
+def index():
+    conn = db_conn()
+    # to display the time stamp in local time --> datetime(your_column_name, 'localtime') as column_name
+    notes = conn.execute("SELECT content, datetime(time_stamp, 'localtime') as time_stamp FROM table_posts ORDER BY time_stamp DESC").fetchall()
+    conn.close()
+
+    # transfer content to markdown format
+    posts = []
+    for note in notes:
+        note = dict(note)
+        note['content'] = markdown.markdown(note['content'])
+        posts.append(note)
+    # END transfer content to markdown format
+
+    return render_template('index.html', posts=posts)
+--------------------------------------------------------------
+
+4. Prepare your flask app to be deployed
+In git bash type the following. This creates a file called requirements.txt which contains all the dependencies for your project.
+--------------------------------------------------------------
+pip freeze > requirements.txt
+--------------------------------------------------------------
+
